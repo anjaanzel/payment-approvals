@@ -25,6 +25,8 @@ class CreatePaymentApprovalsTable extends Migration
             $table->foreign('user_id')
             ->references('id')
             ->on('users');
+
+            $table->unique(['payment_id', 'payment_type', 'user_id']);
         });
     }
 
