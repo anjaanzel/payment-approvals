@@ -29,6 +29,6 @@ Route::middleware('auth:sanctum')->group(function () {
     
     Route::controller(PaymentApprovalController::class)->group(function () {
         Route::post('approve', 'store');
-        Route::post('report', 'report');
+        Route::get('report', 'report');
     });
 });

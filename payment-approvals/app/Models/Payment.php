@@ -20,8 +20,29 @@ class Payment extends Model
         'total_amount',
     ];
 
+    protected $appends = ['is_approved'];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function paymentApprovals()
+    {
+        return PaymentApproval::where('payment_id', $this->id)->where('payment_type', 'REGULAR')->get();
+    }
+
+    public function getIsApprovedAttribute(): bool
+    {
+        $statuses = PaymentApproval::where('payment_type', 'REGULAR')
+            ->where('payment_id', $this->id)
+            ->get()
+            ->pluck('status')
+            ->toArray();
+
+        if (count($statuses) > 0 && !in_array('DISAPPROVED', $statuses)) {
+            return true;
+        }
+        return false;
     }
 }

@@ -28,7 +28,7 @@ class ApprovementResource extends JsonResource
                 throw new ModelNotFoundException($data['payment_id']);
         }
         return [
-            'user' => $this->user->first_name . ' ' . $this->user->last_name,
+            'approver' => $this->user->first_name . ' ' . $this->user->last_name,
             'payment_type' => $this->payment_type,
             'payment' => 'Payment no.' . $payment->id . ' by ' . $payment->user->first_name . ' ' . $payment->user->last_name . ': ' . $amount,
             'voted_at' => $this->created_at->format('d/m/Y H:m:s'),

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -43,4 +44,19 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function regularPaymentApprovals(): HasMany
+    {
+        return $this->hasMany(PaymentApproval::class)->where('payment_type', 'REGULAR');
+    }
+
+    public function travelPaymentApprovals(): HasMany
+    {
+        return $this->hasMany(PaymentApproval::class)->where('payment_type', 'TRAVEL');
+    }
+
+    // public function approvedPayments()
+    // {
+    //     return $this->paymentApprovals->where('payment')->pluck('')
+    // }
 }
