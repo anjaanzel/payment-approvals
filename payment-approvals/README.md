@@ -1,64 +1,273 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+## 1. Registration
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+```http
+POST /api/register
+```
 
-## About Laravel
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `first_name` | `string` | **Required**. |
+| `last_name` | `string` | **Required**. |
+| `password` | `string` | **Required**. |
+| `confirm_password` | `string` | **Required**. Same as initial password |
+| `email` | `string` | **Required**. |
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+** Response example **
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+```javascript
+{
+    "success": true,
+    "data": {
+        "token": "6|A0hv5bgsUt8LBgCxHp5D3uaG0mPwgNvIS2vpXQy5",
+        "name": "Anja"
+    },
+    "message": "User registered successfully."
+}
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 2. Login
 
-## Learning Laravel
+```http
+POST /api/login
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `email` | `string` | **Required**. |
+| `password` | `string` | **Required**. |
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+** Response example **
 
-## Laravel Sponsors
+```javascript
+{
+    "success": true,
+    "data": {
+        "token": "8|imMs9bUoH7nVMz1WATIjp36lpSPQngbr21WZsufr",
+        "name": "Anja"
+    },
+    "message": "User login successfully."
+}
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
 
-### Premium Partners
+## 3. Store Payments
+**Bearer Token is required**
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+**Allowed for all users**
+```http
+POST /api/payments
+```
 
-## Contributing
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `total_amount` | `float` | **Required**. |
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+** Response example **
 
-## Code of Conduct
+```javascript
+{
+    "success": true,
+    "data": {
+        "id": 2,
+        "user": "Anja Anzel",
+        "amount": "56550",
+        "created_at": "29/12/2022",
+        "updated_at": "29/12/2022"
+    },
+    "message": "Payment created successfully."
+}
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 4. Store Travel Payments ##
+**Bearer Token is required**
 
-## Security Vulnerabilities
+**Allowed for all users**
+```http
+POST /api/travel-payments
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `amount` | `float` | **Required**. |
 
-## License
+** Response example **
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```javascript
+{
+    "success": true,
+    "data": {
+        "id": 2,
+        "user": "Anja Anzel",
+        "amount": "56550",
+        "created_at": "29/12/2022",
+        "updated_at": "29/12/2022"
+    },
+    "message": "Payment created successfully."
+}
+```
+
+## 5. Retreive Payments ##
+**Bearer Token is required**
+
+**Allowed only for APPROVERS**
+```http
+GET /api/payments
+```
+
+** Response example **
+
+```javascript
+{
+    "success": true,
+    "data": [
+        {
+            "id": 2,
+            "user": "Anja Anzel",
+            "amount": 56550,
+            "created_at": "29/12/2022",
+            "updated_at": "29/12/2022"
+        },
+        {
+            "id": 3,
+            "user": "Anja Anzel",
+            "amount": 56550,
+            "created_at": "29/12/2022",
+            "updated_at": "29/12/2022"
+        }
+    ],
+    "message": "Payments retrieved successfully."
+}
+```
+
+
+## 6. Retreive a specific Payment ##
+**Bearer Token is required**
+
+**Allowed only for APPROVERS**
+```http
+GET /api/payments/{id}
+```
+
+** Response example **
+
+```javascript
+{
+    "success": true,
+    "data": {
+        "id": 3,
+        "user": "Anja Anzel",
+        "amount": 56550,
+        "created_at": "29/12/2022",
+        "updated_at": "29/12/2022"
+    },
+    "message": "Payment retrieved successfully."
+}
+```
+
+## 7. Update a specific Payment ##
+**Bearer Token is required**
+
+**Allowed only for APPROVERS**
+```http
+PUT /api/payments/{id}
+```
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `total_amount` | `float` | **Required**. |
+
+** Response example **
+
+```javascript
+{
+    "success": true,
+    "data": {
+        "id": 3,
+        "user": "Anja Anzel",
+        "amount": "2222",
+        "created_at": "29/12/2022",
+        "updated_at": "29/12/2022"
+    },
+    "message": "Payment updated successfully."
+}
+```
+
+## 8. Delete a specific Payment ##
+**Bearer Token is required**
+
+**Allowed only for APPROVERS**
+```http
+DELETE /api/payments/{id}
+```
+
+** Response example **
+
+```javascript
+{
+    "success": true,
+    "data": [],
+    "message": "Payment deleted successfully."
+}
+```
+
+## 9-12 equivalent travel payments CRUD ##
+
+## 13. Approve a specific Payment ##
+**Bearer Token is required**
+
+**Allowed only for APPROVERS**
+```http
+POST /api/approve
+```
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `payment_id` | `int` | **Required**. |
+| `payment_type` | `string` | **Required**. enum in: REGULAR or TRAVEL|
+| `status` | `string` | **Required**. enum in: APPROVED or DISAPPROVED|
+
+** Response example **
+
+```javascript
+{
+    "success": true,
+    "data": {
+        "approver": "Jane Doe",
+        "payment_type": "REGULAR",
+        "payment": "Payment no.7 by Anja Anzel: 5655",
+        "voted_at": "28/12/2022 23:12:46"
+    },
+    "message": "REGULAR payment no. 7 APPROVED"
+}
+```
+
+## 14. Report ##
+**Bearer Token is required**
+
+**Allowed only for APPROVERS**
+```http
+GET /api/report
+```
+** Response example **
+
+```javascript
+{
+    "success": true,
+    "data": [
+        {
+            "approver": "Anja Anzel",
+            "numberOfGivenApprovals": 0,
+            "numberOfApprovedPayments": 0
+        },
+        {
+            "approver": "Jane Doe",
+            "numberOfGivenApprovals": 5,
+            "numberOfApprovedPayments": 3
+        },
+        {
+            "approver": "Michael Scott",
+            "numberOfGivenApprovals": 3,
+            "numberOfApprovedPayments": 2
+        }
+    ],
+    "message": "Successfully retrieved data."
+}
+```
