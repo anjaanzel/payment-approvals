@@ -35,10 +35,10 @@ Route::middleware(['auth:sanctum', 'ability:approvals'])->group(function () {
     Route::put('/payments/{id}', [PaymentController::class, 'update']);
     Route::delete('/payments/{id}', [PaymentController::class, 'destroy']);
 
-    Route::get('/payments', [TravelPaymentController::class, 'index']);
-    Route::get('/payments/{id}', [TravelPaymentController::class, 'show']);
-    Route::put('/payments/{id}', [TravelPaymentController::class, 'update']);
-    Route::delete('/payments/{id}', [TravelPaymentController::class, 'destroy']);
+    Route::get('/travel-payments', [TravelPaymentController::class, 'index']);
+    Route::get('/travel-payments/{id}', [TravelPaymentController::class, 'show']);
+    Route::put('/travel-payments/{id}', [TravelPaymentController::class, 'update']);
+    Route::delete('/travel-payments/{id}', [TravelPaymentController::class, 'destroy']);
     
     Route::controller(PaymentApprovalController::class)->group(function () {
         Route::post('approve', 'store');

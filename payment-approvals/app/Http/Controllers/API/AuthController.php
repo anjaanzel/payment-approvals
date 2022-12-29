@@ -37,7 +37,7 @@ class AuthController extends BaseController
         $success['token'] =  $user->createToken('API Token', ['create-payment'])->plainTextToken;
         $success['name'] =  $user->first_name;
    
-        return $this->responseService->sendResponse($success, 'User register successfully.');
+        return $this->responseService->sendResponse($success, 'User registered successfully.');
     }
    
     public function login(Request $request): JsonResponse
