@@ -33,7 +33,9 @@ class PaymentController extends BaseController
 
     public function store(Request $request)
     {
-        return $this->paymentService->create(array_merge($request->all(), ['user_id' => Auth::user()->id]));
+        if (Auth::user()->tokenCan('create-payment')) {
+            return $this->paymentService->create(array_merge($request->all(), ['user_id' => Auth::user()->id]));
+        }
     }
 
     public function show($id)

@@ -23,9 +23,22 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('login', 'login');
 });
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::resource('payments', PaymentController::class);
-    Route::resource('travel-payments', TravelPaymentController::class);
+Route::post('/payments', [PaymentController::class, 'store'])
+    ->middleware(['auth:sanctum', 'abilities:create-payment']);
+
+Route::post('/travel-payments', [TravelPaymentController::class, 'store'])
+    ->middleware(['auth:sanctum', 'abilities:create-payment']);
+
+Route::middleware(['auth:sanctum', 'ability:approvals'])->group(function () {
+    Route::get('/payments', [PaymentController::class, 'index']);
+    Route::get('/payments/{id}', [PaymentController::class, 'show']);
+    Route::put('/payments/{id}', [PaymentController::class, 'update']);
+    Route::delete('/payments/{id}', [PaymentController::class, 'destroy']);
+
+    Route::get('/payments', [TravelPaymentController::class, 'index']);
+    Route::get('/payments/{id}', [TravelPaymentController::class, 'show']);
+    Route::put('/payments/{id}', [TravelPaymentController::class, 'update']);
+    Route::delete('/payments/{id}', [TravelPaymentController::class, 'destroy']);
     
     Route::controller(PaymentApprovalController::class)->group(function () {
         Route::post('approve', 'store');

@@ -34,7 +34,7 @@ class AuthController extends BaseController
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
-        $success['token'] =  $user->createToken('API Token')->plainTextToken;
+        $success['token'] =  $user->createToken('API Token', ['create-payment'])->plainTextToken;
         $success['name'] =  $user->first_name;
    
         return $this->responseService->sendResponse($success, 'User register successfully.');
@@ -44,7 +44,13 @@ class AuthController extends BaseController
     {
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user();
-            $success['token'] =  $user->createToken('API Token')->plainTextToken;
+
+            $abilities = ['create-payment'];
+            if ($user->type == 'APPROVER') {
+                $abilities[] = 'approvals';
+            }
+
+            $success['token'] =  $user->createToken('API Token', $abilities)->plainTextToken;
             $success['name'] =  $user->first_name;
    
             return $this->responseService->sendResponse($success, 'User login successfully.');
