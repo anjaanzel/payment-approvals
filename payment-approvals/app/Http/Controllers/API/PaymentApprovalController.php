@@ -2,10 +2,8 @@
    
 namespace App\Http\Controllers\API;
 
-use App\Http\Resources\ApproverResource;
 use App\Http\Resources\PaymentResource;
 use App\Models\Payment;
-use App\Models\PaymentApproval;
 use App\Models\TravelPayment;
 use App\Models\User;
 use App\Services\PaymentService;
@@ -42,30 +40,10 @@ class PaymentApprovalController extends BaseController
         $approvedPaymentIds = Payment::get()->where('isApproved', true)->pluck('id')->toArray();
         $approvedTravelPaymentIds = TravelPayment::get()->where('isApproved', true)->pluck('id')->toArray();
         $approvers = User::where('type', 'APPROVER')->get();
-        $data = [];
-        foreach ($approvers as $approver) {
-            $approver->regularPaymentApprovalCount = $this->
-                getApprovalCount('REGULAR', $approvedPaymentIds, $approver->id);
-
-            $approver->travelPaymentApprovalCount = $this->
-                getApprovalCount('TRAVEL', $approvedTravelPaymentIds, $approver->id);
-            
-            $approver->givenApprovals = PaymentApproval::where('user_id', $approver->id)->count();
-
-            $data[] = new ApproverResource($approver);
-        }
 
         return $this->responseService->sendResponse(
-            $data,
+            $this->paymentApprovalService->formatData($approvedPaymentIds, $approvedTravelPaymentIds, $approvers),
             'Successfully retrieved data.'
         );
-    }
-
-    private function getApprovalCount(string $type, array $ids, int $approverId): int
-    {
-        return PaymentApproval::where('user_id', $approverId)
-            ->where('payment_type', $type)
-            ->whereIn('payment_id', $ids)
-            ->count();
     }
 }

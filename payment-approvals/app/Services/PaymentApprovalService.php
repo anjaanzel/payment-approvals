@@ -2,12 +2,15 @@
 
 namespace App\Services;
 
+use App\Models\PaymentApproval;
 use App\Http\Resources\ApprovementResource;
+use App\Http\Resources\ApproverResource;
 use App\Repositories\PaymentApprovalRepository;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\Collection;
 use Validator;
 
 class PaymentApprovalService
@@ -59,5 +62,30 @@ class PaymentApprovalService
             default:
                 throw new ModelNotFoundException($data['payment_id']);
         }
+    }
+
+    public function formatData(array $approvedPaymentIds, array $approvedTravelPaymentIds, Collection $approvers): array
+    {
+        $data = [];
+        foreach ($approvers as $approver) {
+            $approver->regularPaymentApprovalCount = $this->
+                getApprovalCount('REGULAR', $approvedPaymentIds, $approver->id);
+
+            $approver->travelPaymentApprovalCount = $this->
+                getApprovalCount('TRAVEL', $approvedTravelPaymentIds, $approver->id);
+            
+            $approver->givenApprovals = PaymentApproval::where('user_id', $approver->id)->count();
+
+            $data[] = new ApproverResource($approver);
+        }
+        return $data;
+    }
+    
+    private function getApprovalCount(string $type, array $ids, int $approverId): int
+    {
+        return PaymentApproval::where('user_id', $approverId)
+            ->where('payment_type', $type)
+            ->whereIn('payment_id', $ids)
+            ->count();
     }
 }
